@@ -56,13 +56,7 @@ create_table_index <- function(all_za_users) {
 # table (check dataType field)
 get_non_background_activity_count <- function(all_za_users) {
   activity_counts <- all_za_users %>%
-    filter(originalTable != "sms-messages-sent-from-bridge-v1",
-           !str_detect(originalTable, "AmbientLight"),
-           !str_detect(originalTable, "BackgroundData"),
-           !str_detect(originalTable, "BatteryStatistics"),
-           !str_detect(originalTable, "ChargingTime"),
-           !str_detect(originalTable, "DataUsage"),
-           !str_detect(originalTable, "ScreenTime")) %>%
+    filter(str_detect(originalTable, "Surveys")) %>%
     mutate(month = lubridate::month(createdOn)) %>%
     count(healthCode, month) %>%
     rename(activity_count = n) %>%
@@ -84,11 +78,11 @@ main <- function() {
   args <- read_args()
   synLogin(email = args$synapseEmail, password = args$synapsePassword)
   bridge_login(BRIDGE_APP, args$bridgeEmail, args$bridgePassword)
-  all_za_users <- synTableQuery(glue::glue(
+  all_za_users <- as_tibble(synTableQuery(glue::glue(
       "select * from {HEALTH_DATA_SUMMARY_TABLE} ",
       "where dataGroups like '%ZA%' ",
       "and dataGroups not like '%test%'"
-      ))$asDataFrame()
+      ))$asDataFrame())
   table_index <- create_table_index(all_za_users)
   activity_counts <- get_non_background_activity_count(all_za_users)
   participant_report <- inner_join(
