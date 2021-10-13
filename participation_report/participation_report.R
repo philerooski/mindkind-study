@@ -1,6 +1,7 @@
 library(synapser)
 library(bridgeclient)
 library(tidyverse)
+library(optparse)
 
 BRIDGE_APP <- "wellcome"
 BRIDGE_STUDY <- "wellcome-study"
