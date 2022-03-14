@@ -5,7 +5,7 @@ library(glue)
 
 BRIDGE_APP <- "wellcome"
 BRIDGE_STUDY <- "wellcome-study"
-OUTPUT_PARENT <- "syn25832007"
+OUTPUT_PARENT <- "syn27630674"
 OUTPUT_ENTITY_VIEW <- "syn25832312"
 
 read_args <- function() {
